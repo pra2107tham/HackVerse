@@ -1,21 +1,30 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 import google from '@/public/google.png'
 import img from '@/public/career.png'
 
 export default function LoginPage() {
+  const { data: session } = useSession()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  //const router = useRouter() //Removed useRouter import
+  const router = useRouter()
+
+  useEffect(() => {
+    if (session) {
+      toast('Already logged in')
+      router.push('/dashboard')
+    }
+  }, [session, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

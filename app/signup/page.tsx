@@ -1,23 +1,31 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'react-hot-toast'
-import { useRouter } from 'next/navigation' // Import useRouter
+import { useRouter } from 'next/navigation'
 import google from '@/public/google.png'
 import img from '@/public/career.png'
 
 export default function SignUpPage() {
+  const { data: session } = useSession()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const router = useRouter() // Use useRouter
+  const router = useRouter()
+
+  useEffect(() => {
+    if (session) {
+      toast('Already logged in')
+      router.push('/dashboard')
+    }
+  }, [session, router])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,7 +38,7 @@ export default function SignUpPage() {
       const data = await response.json()
       if (response.ok) {
         toast.success('Account created successfully')
-        router.push('/dashboard') // Use router.push for navigation
+        router.push('/dashboard')
       } else {
         toast.error(data.message || 'Sign up failed')
       }
