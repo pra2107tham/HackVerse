@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Checker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #333333;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555555;
+        }
+        input[type="file"],
+        textarea {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            height: 120px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border: 1px solid #d4edda;
+            border-radius: 5px;
+            display: none;
+        }
+        .error-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Checker</h1>
+        <form id="resumeForm" enctype="multipart/form-data">
+            <label for="resume">Upload Your Resume:</label>
+            <input type="file" id="resume" name="resume" accept=".pdf,.docx,.txt" required>
+
+            <label for="jobDescription">Paste the Job Description (optional):</label>
+            <textarea id="jobDescription" name="job_description" placeholder="Paste the job description here..."></textarea>
+
+            <button type="submit">Check Resume</button>
+        </form>
+
+        <div id="resultContainer" class="result-container"></div>
+        <div id="errorContainer" class="error-container"></div>
+    </div>
+
+    <script>
+        document.getElementById("resumeForm").addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const resumeFile = document.getElementById("resume").files[0];
+            const jobDescription = document.getElementById("jobDescription").value;
+
+            if (!resumeFile) {
+                alert("Please upload a resume file.");
+                return;
+            }
+
+            formData.append("resume", resumeFile);
+            formData.append("job_description", jobDescription);
+
+            const resultContainer = document.getElementById("resultContainer");
+            const errorContainer = document.getElementById("errorContainer");
+            resultContainer.style.display = "none";
+            errorContainer.style.display = "none";
+
+            try {
+                const response = await fetch("/check-resume", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    resultContainer.style.display = "block";
+                    resultContainer.innerHTML = `
+                        <h3>Results:</h3>
+                        <p><strong>Skill Match:</strong> ${result["Skill Match (%)"]}%</p>
+                        <p><strong>Semantic Similarity:</strong> ${result["Semantic Similarity (%)"]}%</p>
+                        <p><strong>Suggestions:</strong> ${result["Suggestions"]}</p>
+                    `;
+                } else {
+                    errorContainer.style.display = "block";
+                    errorContainer.innerHTML = `<strong>Error:</strong> ${result.error}`;
+                }
+            } catch (err) {
+                errorContainer.style.display = "block";
+                errorContainer.innerHTML = `<strong>Error:</strong> ${err.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
