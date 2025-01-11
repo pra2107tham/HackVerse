@@ -10,6 +10,23 @@ import ReactFlow, {
 } from "reactflow";
 import "reactflow/dist/style.css";
 
+// CSS for spinner
+const loaderStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100%",
+};
+
+const spinnerStyle = {
+  border: "4px solid rgba(255, 255, 255, 0.3)",
+  borderTop: "4px solid #3498db",
+  borderRadius: "50%",
+  width: "50px",
+  height: "50px",
+  animation: "spin 1s linear infinite",
+};
+
 const FlowRenderer = () => {
   const [context, setContext] = useState("Software Developer Roadmap");
   const [loading, setLoading] = useState(false);
@@ -67,7 +84,9 @@ const FlowRenderer = () => {
 
       <div style={{ height: "500px", marginTop: "20px" }}>
         {loading ? (
-          <div>Loading...</div>
+          <div style={loaderStyle}>
+            <div style={spinnerStyle}></div>
+          </div>
         ) : (
           <ReactFlowProvider>
             <ReactFlow
