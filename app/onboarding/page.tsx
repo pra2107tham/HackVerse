@@ -124,7 +124,7 @@ export default function OnboardingPage() {
                   placeholder="What is your ultimate career goal?"
                   onChange={handleInputChange}
                 />
-                <Select onValueChange={(value) => handleSelectChange('skills', value)}>
+                <Select onValueChange={(value ) => handleSelectChange('skills', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Skills or resources to achieve your goal" />
                   </SelectTrigger>

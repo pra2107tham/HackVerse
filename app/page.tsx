@@ -2,17 +2,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle, ChevronRight, MessageCircle, FileText, Brain, Users } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-
+import img from '@/public/career.png'
 import { Button } from '@/components/ui/button'
+import { Toaster } from 'react-hot-toast'
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
+    <Toaster />
+    <div className="flex flex-col items-center min-h-screen">
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/90 backdrop-blur">
         <div className="container flex h-14 max-w-screen-2xl items-center">
-          <div className="mr-4 hidden md:flex">
+          <div className="ml-16 mr-4 hidden md:flex">
             <Link className="mr-6 flex items-center space-x-2" href="/">
-              <Image src="/logo.svg" alt="Career Guidance Logo" width={32} height={32} />
+              <Image src={img} alt="Career Guidance Logo" width={32} height={32} />
               <span className="hidden font-bold sm:inline-block">CareerGuide</span>
             </Link>
             <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -37,9 +40,11 @@ export default function LandingPage() {
             </nav>
           </div>
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+            <Link href="/login">
             <Button variant="ghost" className="text-black">
               Log in
             </Button>
+            </Link>
             <Link href="/signup">
               <Button className="bg-black text-white hover:bg-gray-800">Sign up</Button>
             </Link>
@@ -178,10 +183,10 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="w-full border-t border-gray-200 bg-white">
+      <footer className="ml-16 w-full border-t border-gray-200 bg-white">
         <div className="container flex flex-col items-center justify-between space-y-4 py-10 md:h-24 md:flex-row md:py-0">
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-            <Image src="/logo.svg" alt="Career Guidance Logo" width={32} height={32} />
+            <Image src={img} alt="Career Guidance Logo" width={32} height={32} />
             <p className="text-center text-sm leading-loose md:text-left text-gray-600">
               © 2023 CareerGuide. All rights reserved.
             </p>
@@ -193,6 +198,7 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
+    </>
   )
 }
 

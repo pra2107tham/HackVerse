@@ -6,9 +6,11 @@ import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'react-hot-toast'
+import google from '@/public/google.png'
+import img from '@/public/career.png'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -38,7 +40,7 @@ export default function LoginPage() {
     <div className="flex flex-col min-h-screen">
       <header className="flex items-center justify-center h-16 border-b border-gray-200">
         <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo.svg" alt="Career Guidance Logo" width={32} height={32} />
+          <Image src={img} alt="Career Guidance Logo" width={32} height={32} />
           <span className="font-bold text-xl">CareerGuide</span>
         </Link>
       </header>
@@ -51,7 +53,7 @@ export default function LoginPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <Button className="w-full" variant="outline" onClick={handleGoogleLogin}>
-              <Image src="/google-logo.svg" alt="Google Logo" width={20} height={20} className="mr-2" />
+              <Image src={google} alt="Google Logo" width={20} height={20} className="mr-2" />
               Log in with Google
             </Button>
             <div className="flex items-center">

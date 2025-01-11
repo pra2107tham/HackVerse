@@ -9,13 +9,15 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/navigation' // Import useRouter
+import google from '@/public/google.png'
+import img from '@/public/career.png'
 
 export default function SignUpPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  //const router = useRouter() //Removed useRouter import
-  const router = null; //Added null assignment to avoid errors
+  const router = useRouter() // Use useRouter
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +30,7 @@ export default function SignUpPage() {
       const data = await response.json()
       if (response.ok) {
         toast.success('Account created successfully')
-        router.push('/login') //This will cause an error if router is null.  Consider adding error handling.
+        router.push('/dashboard') // Use router.push for navigation
       } else {
         toast.error(data.message || 'Sign up failed')
       }
@@ -42,10 +44,10 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col justify-center min-h-screen">
       <header className="flex items-center justify-center h-16 border-b border-gray-200">
         <Link href="/" className="flex items-center space-x-2">
-          <Image src="/logo.svg" alt="Career Guidance Logo" width={32} height={32} />
+          <Image src={img} alt="Career Guidance Logo" width={32} height={32} />
           <span className="font-bold text-xl">CareerGuide</span>
         </Link>
       </header>
@@ -58,13 +60,13 @@ export default function SignUpPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <Button className="w-full" variant="outline" onClick={handleGoogleSignUp}>
-              <Image src="/google-logo.svg" alt="Google Logo" width={20} height={20} className="mr-2" />
+              <Image src={google} alt="Google Logo" width={20} height={20} className="mr-2" />
               Sign up with Google
             </Button>
-            <div className="flex items-center">
-              <Separator className="flex-grow" />
-              <span className="mx-2 text-sm text-gray-500">or</span>
-              <Separator className="flex-grow" />
+            <div className="flex items-center space-x-2">
+              <Separator className="flex-1" />
+              <span className="text-sm text-gray-500">or</span>
+              <Separator className="flex-1" />
             </div>
             <form onSubmit={handleSignUp} className="space-y-4">
               <Input
