@@ -1,16 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
+import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 export default function OnboardingPage() {
+  const { data: session } = useSession()
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     domain: '',
@@ -21,6 +25,14 @@ export default function OnboardingPage() {
     wantDailyTips: false,
     wantTrendingJobs: false,
   })
+  const router = useRouter()
+
+  useEffect(() => {
+    if (session) {
+      toast('Already logged in')
+      router.push('/dashboard')
+    }
+  }, [session, router])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -61,7 +73,7 @@ export default function OnboardingPage() {
           <CardContent>
             {step === 1 && (
               <div className="space-y-4">
-                <Select onValueChange={(value) => handleSelectChange('domain', value)}>
+                <Select onValueChange={(value: string) => handleSelectChange('domain', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Domain of Study" />
                   </SelectTrigger>
@@ -71,7 +83,7 @@ export default function OnboardingPage() {
                     <SelectItem value="arts">Arts</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select onValueChange={(value) => handleSelectChange('yearOfStudy', value)}>
+                <Select onValueChange={(value: string) => handleSelectChange('yearOfStudy', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Year of Study" />
                   </SelectTrigger>
@@ -82,7 +94,7 @@ export default function OnboardingPage() {
                     <SelectItem value="4">4th Year</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select onValueChange={(value) => handleSelectChange('careerTransition', value)}>
+                <Select onValueChange={(value: string) => handleSelectChange('careerTransition', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Preferred Career Transition" />
                   </SelectTrigger>
@@ -105,7 +117,7 @@ export default function OnboardingPage() {
                   />
                 )}
                 {formData.careerTransition === 'industry' && (
-                  <Select onValueChange={(value) => handleSelectChange('industryRole', value)}>
+                  <Select onValueChange={(value: string) => handleSelectChange('industryRole', value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Preferred role in the new industry" />
                     </SelectTrigger>
@@ -124,7 +136,7 @@ export default function OnboardingPage() {
                   placeholder="What is your ultimate career goal?"
                   onChange={handleInputChange}
                 />
-                <Select onValueChange={(value ) => handleSelectChange('skills', value)}>
+                <Select onValueChange={(value: string) => handleSelectChange('skills', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Skills or resources to achieve your goal" />
                   </SelectTrigger>
