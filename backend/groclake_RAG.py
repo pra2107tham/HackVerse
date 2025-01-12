@@ -1,11 +1,11 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from groclake.vectorlake import VectorLake
 from groclake.datalake import DataLake
 from groclake.modellake import ModelLake
 
 # Flask App
-app = Flask(__name__)
+groclake_RAG = Blueprint('groclake_RAG', __name__)
 
 # Set API key and account ID
 GROCLAKE_API_KEY = 'c7e1249ffc03eb9ded908c236bd1996d'
@@ -24,7 +24,7 @@ modellake = ModelLake()
 datalake_id = None
 vectorlake_id = None
 
-@app.route('/upload_document', methods=['POST'])
+@groclake_RAG.route('/upload-document', methods=['POST'])
 def upload_document():
     """Upload a document to DataLake and process it for VectorLake."""
     global datalake_id, vectorlake_id
@@ -50,7 +50,7 @@ def upload_document():
                 return jsonify({"error": "Failed to create VectorLake"}), 500
 
         # Step 2: Get document URL from request
-        document_url = request.json.get("https://drive.google.com/uc?export=download&id=1FSm_9kAz0peygMM10SExj_rRfdDhwNva")
+        document_url = request.json.get("document_url")
         if not document_url:
             return jsonify({"error": "Document URL is required."}), 400
 
@@ -97,7 +97,7 @@ def upload_document():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/chat', methods=['POST'])
+@groclake_RAG.route('/chat', methods=['POST'])
 def chat():
     """Chat endpoint for processing user queries."""
     try:
@@ -149,6 +149,3 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
